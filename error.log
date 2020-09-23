@@ -1,0 +1,21 @@
+{"message":"username is a required attribute!","level":"error","service":"user-service"}
+{"message":"name is a required attribute!","level":"error","service":"user-service"}
+{"message":"email is a required attribute!","level":"error","service":"user-service"}
+{"message":"password is a required attribute!","level":"error","service":"user-service"}
+{"message":"phone is a required attribute!","level":"error","service":"user-service"}
+{"message":" A customer with this username already exists !","level":"error","service":"user-service"}
+{"message":" A customer with this username already exists !","level":"error","service":"user-service"}
+{"message":"username is required attribute!","level":"error","service":"user-service"}
+{"message":"password is required attribute!","level":"error","service":"user-service"}
+{"message":"no customer with this username exists!","level":"error","service":"user-service"}
+{"message":"Invalid Password!","level":"error","service":"user-service"}
+{"message":"address is a required attribute!","level":"error","service":"user-service"}
+{"message":"address is a required attribute!","level":"error","service":"user-service"}
+{"message":"creditCard number is a required attribute!","level":"error","service":"user-service"}
+{"message":"product_id is a required attribute!","level":"error","service":"user-service"}
+{"message":"qty is a required attribute!","level":"error","service":"user-service"}
+{"message":"user's address is not updated!","level":"error","service":"user-service"}
+{"message":"user's creditCardNumber is not updated!","level":"error","service":"user-service"}
+{"message":"qty is a required attribute!","level":"error","service":"user-service"}
+{"message":"quantity must be a natural number","level":"error","service":"user-service"}
+{"message":" no product found for this id!","level":"error","service":"user-service"}
