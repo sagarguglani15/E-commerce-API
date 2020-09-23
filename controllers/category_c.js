@@ -1,12 +1,8 @@
 const {to} = require('await-to-js')
-const Joi = require('@hapi/joi')
 
 const database = require('./../src/lib/database/database')
 const logger = require('./../src/lib/logger/winston')
-
-const category = Joi.object({
-    name: Joi.string().required()
-})
+const catgVal = require('./../src/lib/Payload Validation/validate_joi')
 
 const getCategories = async (params) => {
     try {
@@ -69,14 +65,13 @@ const getCategories = async (params) => {
     }
 }
 
-
 const postCategory = async (params) => {
     try {
         let err, result
 
-        // [err, result] = category.validate(params)
-        if (!params.name) {
-            throw new Error('name missing!')
+        [err, result] = await to(catgVal.newCategory.validateAsync(params))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.category_model.create({

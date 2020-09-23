@@ -2,6 +2,7 @@ const {to} = require('await-to-js')
 
 const database = require('./../src/lib/database/database')
 const logger = require('./../src/lib/logger/winston')
+const orderVal = require('./../src/lib/Payload Validation/validate_joi')
 
 
 const getOrders = async (params) => {
@@ -34,21 +35,12 @@ const newOrder = async (params) => {
     try {
         let err, result
 
-        params.body.customer = params.user.username;
-        if (!params.body.product_id) {
-            throw new Error('product_id is a required attribute!')
-        }
-        if (!params.body.qty) {
-            throw new Error('qty is a required attribute!')
+        [err, result] = await to(orderVal.newOrder.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
-        if (parseInt(params.body.qty)) {
-            if (parseInt(params.body.qty) < 0) {
-                throw new Error("quantity must be a natural number")
-            }
-        } else {
-            throw new Error("qty is not a valid natural number !")
-        }
+        params.body.customer = params.user.username;
 
         [err, result] = await to(database.product_model.findAll({
             where: {

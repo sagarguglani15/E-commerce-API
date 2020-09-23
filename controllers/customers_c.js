@@ -4,24 +4,15 @@ const bcrypt = require('bcrypt')
 
 const database = require('./../src/lib/database/database')
 const logger = require('./../src/lib/logger/winston')
+const customerVal = require('./../src/lib/Payload Validation/validate_joi')
 
 const postCustomer = async (params) => {
     try {
         let err, result
-        if (!params.username) {
-            throw new Error('username is a required attribute!')
-        }
-        if (!params.name) {
-            throw new Error('name is a required attribute!')
-        }
-        if (!params.email) {
-            throw new Error('email is a required attribute!')
-        }
-        if (!params.password) {
-            throw new Error('password is a required attribute!')
-        }
-        if (!params.phone) {
-            throw new Error('phone is a required attribute!')
+
+        [err, result] = await to(customerVal.newCustomer.validateAsync(params))
+        if (err) {
+            throw new Error(err.message)
         }
 
         let encryptedPassword
@@ -75,11 +66,9 @@ const loginCustomer = async (params) => {
     try {
         let err, result
 
-        if (!params.username) {
-            throw new Error('username is required attribute!')
-        }
-        if (!params.password) {
-            throw new Error('password is required attribute!')
+        [err, result] = await to(customerVal.loginCustomer.validateAsync(params))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.customer_model.findAll({
@@ -158,8 +147,9 @@ const updateAddress = async (params) => {
     try {
         let err, result
 
-        if (!params.body.address) {
-            throw new Error('address is a required attribute!')
+        [err, result] = await to(customerVal.address.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.customer_model.update({
@@ -193,8 +183,9 @@ const updateCreditCard = async (params) => {
     try {
         let err, result
 
-        if (!params.body.creditCard) {
-            throw new Error('creditCard number is a required attribute!')
+        [err, result] = await to(customerVal.creditCard.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.customer_model.update({

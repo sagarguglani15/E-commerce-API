@@ -2,6 +2,7 @@ const {to} = require('await-to-js')
 
 const database = require('./../src/lib/database/database')
 const logger = require('./../src/lib/logger/winston')
+const attrVal = require('./../src/lib/Payload Validation/validate_joi')
 
 const getAttributes = async (params) => {
     try {
@@ -69,22 +70,15 @@ const postAttribute = async (params) => {
     try {
         let err, result
 
-        // [err, result] = category.validate(params)
-        if (!params.name) {
-            throw new Error('Attribute name is a required value!')
-        }
-        if (!params.value) {
-            throw new Error('Attribute value can\'t be blank!')
-        }
-        if (!params.product_id) {
-            throw new Error('Attribute\'s product_id is a required value!')
+        [err, result] = await to(attrVal.newAttribute.validateAsync(params))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.attributes_model.create(params))
         if (err) {
             throw new Error(err.message)
         }
-
 
         return {
             'data': {"Success": "Attribute Added"},

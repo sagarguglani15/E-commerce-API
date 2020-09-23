@@ -4,6 +4,7 @@ const Sequelize = require('sequelize')
 const database = require('./../src/lib/database/database')
 const logger = require('./../src/lib/logger/winston')
 const Order = require('./../controllers/orders_c')
+const cartVal = require('./../src/lib/Payload Validation/validate_joi')
 
 const showCart = async (params) => {
     try {
@@ -37,19 +38,9 @@ const addItem = async (params) => {
         let err, result
         params.body.customer = params.user.username;
 
-        if (!params.body.product_id) {
-            throw new Error('product_id is a required attribute!')
-        }
-        if (!params.body.qty) {
-            throw new Error('qty is a required attribute!')
-        }
-
-        if (parseInt(params.body.qty)) {
-            if (parseInt(params.body.qty) < 0) {
-                throw new Error("quantity must be a natural number")
-            }
-        } else {
-            throw new Error("qty is not a valid natural number !")
+        [err, result] = await to(cartVal.newOrder.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.product_model.findAll({
@@ -114,19 +105,9 @@ const updateQty = async (params) => {
         let err, result
         params.body.customer = params.user.username;
 
-        if (!params.body.product_id) {
-            throw new Error('product_id is a required attribute!')
-        }
-        if (!params.body.qty) {
-            throw new Error('qty is a required attribute!')
-        }
-
-        if (parseInt(params.body.qty)) {
-            if (parseInt(params.body.qty) < 0) {
-                throw new Error("quantity must be a natural number")
-            }
-        } else {
-            throw new Error("qty is not a valid natural number !")
+        [err, result] = await to(cartVal.newOrder.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.product_model.findAll({
@@ -188,8 +169,9 @@ const removeItem = async (params) => {
         let err, result
         params.body.customer = params.user.username;
 
-        if (!params.body.product_id) {
-            throw new Error('product_id is a required attribute!')
+        [err, result] = await to(cartVal.productID.validateAsync(params.body))
+        if (err) {
+            throw new Error(err.message)
         }
 
         [err, result] = await to(database.product_model.findAll({
