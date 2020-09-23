@@ -5,38 +5,32 @@ const {to} = require('await-to-js')
 const Orders = require('./../controllers/orders_c')
 const authenticate = require('./../controllers/auth')
 
-router.get('/', authenticate, async (req,res)=>{
+router.get('/', authenticate, async (req, res) => {
     let err, result
     [err, result] = await to(Orders.getOrders(req.user))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
+            'data': null,
             'error': {
                 'message': err.message
             }
         })
     }
-    return res.json({
-        'data':result,
-        'error':null
-    })
+    return res.json(result)
 })
 
-router.post('/', authenticate, async (req,res)=>{
+router.post('/', authenticate, async (req, res) => {
     let err, result
     [err, result] = await to(Orders.newOrder(req))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
+            'data': null,
             'error': {
                 'message': err.message
             }
         })
     }
-    return res.json({
-        'data':result,
-        'error':null
-    })
+    return res.json(result)
 })
 
 module.exports = router

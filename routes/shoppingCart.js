@@ -2,87 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 const {to} = require('await-to-js')
-var Products = require('./../controllers/product_c')
+const ShoppingCart = require('./../controllers/shoppingCart_c')
+const authenticate = require('./../controllers/auth')
 
-router.get('/', async (req, res) => {
-    let err, result;
-    [err, result] = await to(Products.getProducts({}))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-
-    return res.json(result)
-})
-
-router.get('/:product_id', async (req, res) => {
-    let err, result;
-    [err, result] = await to(Products.getProducts(req.params))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-
-    return res.json(result)
-})
-
-router.get('/inCategory/:category_id', async (req, res) => {
-    let err, result;
-    [err, result] = await to(Products.getProducts(req.params))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-
-    return res.json(result)
-})
-
-router.post('/', async (req, res) => {
-    let err, result;
-    [err, result] = await to(Products.postProduct(req.body))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-
-    return res.json(result)
-})
-
-router.get('/:product_id/reviews', async (req, res) => {
-    let err, result;
-    [err, result] = await to(Products.getReview(req.params))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-
-    return res.json(result)
-})
-
-router.post('/:product_id/reviews', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     let err, result
-    req.body.product_id = req.params.product_id;
-    [err, result] = await to(Products.postReview(req.body))
+    [err, result] = await to(ShoppingCart.showCart(req.user))
     if (err) {
         return res.json({
             'data': null,
@@ -94,4 +19,74 @@ router.post('/:product_id/reviews', async (req, res) => {
     return res.json(result)
 })
 
-module.exports = router;
+router.post('/add', authenticate, async (req, res) => {
+    let err, result
+    [err, result] = await to(ShoppingCart.addItem(req))
+    if (err) {
+        return res.json({
+            'data': null,
+            'error': {
+                'message': err.message
+            }
+        })
+    }
+    return res.json(result)
+})
+
+router.put('/qty', authenticate, async (req, res) => {
+    let err, result
+    [err, result] = await to(ShoppingCart.updateQty(req))
+    if (err) {
+        return res.json({
+            'data': null,
+            'error': {
+                'message': err.message
+            }
+        })
+    }
+    return res.json(result)
+})
+
+router.delete('/removeProduct', authenticate, async (req, res) => {
+    let err, result
+    [err, result] = await to(ShoppingCart.removeItem(req))
+    if (err) {
+        return res.json({
+            'data': null,
+            'error': {
+                'message': err.message
+            }
+        })
+    }
+    return res.json(result)
+})
+
+router.get('/totalAmount', authenticate, async (req, res) => {
+    let err, result
+    [err, result] = await to(ShoppingCart.getAmount(req))
+    if (err) {
+        return res.json({
+            'data': null,
+            'error': {
+                'message': err.message
+            }
+        })
+    }
+    return res.json(result)
+})
+
+router.post('/checkout', authenticate, async (req, res) => {
+    let err, result
+    [err, result] = await to(ShoppingCart.checkOut(req))
+    if (err) {
+        return res.json({
+            'data': null,
+            'error': {
+                'message': err.message
+            }
+        })
+    }
+    return res.json(result)
+})
+
+module.exports = router

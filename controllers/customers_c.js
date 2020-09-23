@@ -125,25 +125,25 @@ const loginCustomer = async (params) => {
     }
 }
 
-const getCustomer = async (params) =>{
-    try{
+const getCustomer = async (params) => {
+    try {
         let err, result
 
         [err, result] = await to(database.customer_model.findAll({
-            where:{
+            where: {
                 username: params.user.username
             }
         }))
-        if(err){
+        if (err) {
             throw new Error(err.message)
         }
 
         return {
-            'data':{
+            'data': {
                 'customer details': result
-            },'error':null
+            }, 'error': null
         }
-    }catch (err) {
+    } catch (err) {
         logger.error(err.message)
         return {
             'data': null,
@@ -154,31 +154,31 @@ const getCustomer = async (params) =>{
     }
 }
 
-const updateAddress = async (params)=>{
-    try{
+const updateAddress = async (params) => {
+    try {
         let err, result
 
-        if(!params.body.address){
+        if (!params.body.address) {
             throw new Error('address is a required attribute!')
         }
 
         [err, result] = await to(database.customer_model.update({
             address: params.body.address
-        },{
-            where:{
+        }, {
+            where: {
                 username: params.user.username
             }
         }))
-        if(err){
+        if (err) {
             throw new Error(err.message)
         }
 
         return {
             'data': {
                 'message': 'address updated successfully!'
-            },'error':null
+            }, 'error': null
         }
-    }catch (err) {
+    } catch (err) {
         logger.error(err.message)
         return {
             'data': null,
@@ -189,31 +189,31 @@ const updateAddress = async (params)=>{
     }
 }
 
-const updateCreditCard = async (params)=>{
-    try{
+const updateCreditCard = async (params) => {
+    try {
         let err, result
 
-        if(!params.body.creditCard){
+        if (!params.body.creditCard) {
             throw new Error('creditCard number is a required attribute!')
         }
 
         [err, result] = await to(database.customer_model.update({
             creditCardNumber: params.body.creditCard
-        },{
-            where:{
+        }, {
+            where: {
                 username: params.user.username
             }
         }))
-        if(err){
+        if (err) {
             throw new Error(err.message)
         }
 
         return {
             'data': {
                 'message': 'creditCard number updated successfully!'
-            },'error':null
+            }, 'error': null
         }
-    }catch (err) {
+    } catch (err) {
         logger.error(err.message)
         return {
             'data': null,

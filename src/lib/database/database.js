@@ -14,13 +14,13 @@ const connection = new Sequelize(
 )
 
 const category_model = connection.define('category', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
@@ -28,30 +28,30 @@ const category_model = connection.define('category', {
 })
 
 const product_model = connection.define('products', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    details:{
+    details: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    price:{
+    price: {
         type: DataTypes.FLOAT,
         defaultValue: 0,
     },
-    category_id:{
+    category_id: {
         type: DataTypes.BIGINT(11),
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: category_model,
             key: 'id'
         }
@@ -59,26 +59,26 @@ const product_model = connection.define('products', {
 })
 
 const attributes_model = connection.define('attributes', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    value:{
+    value: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    product_id:{
+    product_id: {
         type: DataTypes.BIGINT(11),
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: product_model,
             key: 'id'
         }
@@ -86,21 +86,21 @@ const attributes_model = connection.define('attributes', {
 })
 
 const review_model = connection.define('reviews', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    review:{
+    review: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    product_id:{
+    product_id: {
         type: DataTypes.BIGINT(11),
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: product_model,
             key: 'id'
         }
@@ -108,35 +108,35 @@ const review_model = connection.define('reviews', {
 })
 
 const customer_model = connection.define('customer', {
-    username:{
+    username: {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    email:{
+    email: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
     },
-    phone:{
+    phone: {
         type: DataTypes.BIGINT,
         notEmpty: true,
         notNull: true
     },
-    address:{
+    address: {
         type: DataTypes.STRING,
         defaultValue: null
     },
-    creditCardNumber:{
+    creditCardNumber: {
         type: DataTypes.BIGINT,
         defaultValue: null
     },
-    encryptedPassword:{
+    encryptedPassword: {
         type: DataTypes.STRING,
         notEmpty: true,
         notNull: true
@@ -144,58 +144,58 @@ const customer_model = connection.define('customer', {
 })
 
 const order_model = connection.define('orders', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    customer:{
+    customer: {
         type: DataTypes.STRING,
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: customer_model,
             key: 'username'
         }
     },
-    product_id:{
+    product_id: {
         type: DataTypes.BIGINT(11),
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: product_model,
             key: 'id'
         }
     },
-    qty:{
+    qty: {
         type: DataTypes.INTEGER,
         defaultValue: 1
     }
 })
 
 const cartItems_model = connection.define('shoppingCart', {
-    id:{
+    id: {
         type: DataTypes.BIGINT(11),
-        autoIncrement:true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    customer:{
+    customer: {
         type: DataTypes.STRING,
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: customer_model,
             key: 'username'
         }
     },
-    product_id:{
+    product_id: {
         type: DataTypes.BIGINT(11),
-        allowNull:false,
-        references:{
+        allowNull: false,
+        references: {
             model: product_model,
             key: 'id'
         }
     },
-    qty:{
+    qty: {
         type: DataTypes.INTEGER,
         defaultValue: 1
     }

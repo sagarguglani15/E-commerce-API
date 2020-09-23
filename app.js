@@ -13,6 +13,7 @@ var attributesRouter = require('./routes/attributes');
 var productRouter = require('./routes/products')
 var customerRouter = require('./routes/customer')
 var orderRouter = require('./routes/orders')
+var shoppingCartRouter = require('./routes/shoppingCart')
 
 const startServer = () => {
 
@@ -38,6 +39,7 @@ const startServer = () => {
     app.use('/products', productRouter);
     app.use('/customer', customerRouter);
     app.use('/orders', orderRouter);
+    app.use('/shoppingCart', shoppingCartRouter);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {

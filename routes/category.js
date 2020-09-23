@@ -8,10 +8,10 @@ var Category = require('./../controllers/category_c')
 router.get('/', async (req, res) => {
     let err, result
     [err, result] = await to(Category.getCategories({}))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
-            'error':{
+            'data': null,
+            'error': {
                 'message': err.message
             }
         })
@@ -23,10 +23,10 @@ router.get('/', async (req, res) => {
 router.get('/:category_id', async (req, res) => {
     let err, result
     [err, result] = await to(Category.getCategories(req.params))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
-            'error':{
+            'data': null,
+            'error': {
                 'message': err.message
             }
         })
@@ -38,10 +38,10 @@ router.get('/:category_id', async (req, res) => {
 router.get('/inProduct/:product_id', async (req, res) => {
     let err, result
     [err, result] = await to(Category.getCategories(req.params))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
-            'error':{
+            'data': null,
+            'error': {
                 'message': err.message
             }
         })
@@ -54,10 +54,10 @@ router.post('/', async (req, res) => {
 
     let err, result
     [err, result] = await to(Category.postCategory(req.body))
-    if(err){
+    if (err) {
         return res.json({
-            'data':null,
-            'error':{
+            'data': null,
+            'error': {
                 'message': err.message
             }
         })
