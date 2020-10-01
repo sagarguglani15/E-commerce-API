@@ -8,7 +8,7 @@ const authenticate = (req, res, next) => {
         } else {
             token = token.split(' ')[1]
             if (token) {
-                jwt.verify(token, process.env.GNOME_DESKTOP_SESSION_ID, (err, user) => {
+                jwt.verify(token, process.env.mySecretKey, (err, user) => {
                     if (err) {
                         throw new Error('Invalid Access Token')
                     } else {

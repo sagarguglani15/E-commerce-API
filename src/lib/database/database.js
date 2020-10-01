@@ -5,7 +5,7 @@ const logger = require('../logger/winston')
 const connection = new Sequelize(
     'ecom',
     'root',
-    'rootpasswordgiven',
+    process.env.MySQLpass,
     {
         host: 'localhost',
         dialect: 'mysql',

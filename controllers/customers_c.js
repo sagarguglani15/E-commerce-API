@@ -42,7 +42,7 @@ const postCustomer = async (params) => {
         }
 
         let customer = {username: params.username, encryptedPassword: params.encryptedPassword};
-        const token = jwt.sign(customer, process.env.GNOME_DESKTOP_SESSION_ID, {expiresIn: '50m'})
+        const token = jwt.sign(customer, process.env.mySecretKey, {expiresIn: '50m'})
 
         return {
             'data': {
@@ -92,7 +92,7 @@ const loginCustomer = async (params) => {
         }
         if (result) {
             customer = {username: params.username, encryptedPassword: customer.encryptedPassword}
-            const token = jwt.sign(customer, process.env.GNOME_DESKTOP_SESSION_ID, {expiresIn: '50m'})
+            const token = jwt.sign(customer, process.env.mySecretKey, {expiresIn: '50m'})
             return {
                 'data': {
                     'message': 'logged in successfully !',
