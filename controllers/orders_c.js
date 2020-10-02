@@ -1,50 +1,51 @@
 const {to} = require('await-to-js')
 
-const database = require('./../src/lib/database/database')
+const database = require('./../src/lib/database/models/order_model')
 const logger = require('./../src/lib/logger/winston')
 const orderVal = require('./../src/lib/Payload Validation/validate_joi')
 
 
-const getOrders = async (params) => {
+const getOrders = async (req, res) => {
     try {
+        let err, result
         [err, result] = await to(database.order_model.findAll({
             where: {
-                customer: params.username
+                customer: req.user.username
             }
         }))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': result,
             'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const newOrder = async (params) => {
+const newOrder = async (req, res) => {
     try {
         let err, result
 
-        [err, result] = await to(orderVal.newOrder.validateAsync(params.body))
+        [err, result] = await to(orderVal.newOrder.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        params.body.customer = params.user.username;
+        req.body.customer = req.user.username;
 
-        [err, result] = await to(database.product_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
-                id: params.body.product_id
+                id: req.body.product_id
             }
         }))
         if (err) {
@@ -56,9 +57,9 @@ const newOrder = async (params) => {
 
         let price = result[0]['dataValues']['price'];
 
-        [err, result] = await to(database.customer_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/customer_model').customer_model.findAll({
             where: {
-                username: params.user.username
+                username: req.user.username
             }
         }))
 
@@ -70,25 +71,25 @@ const newOrder = async (params) => {
         }
 
 
-        [err, result] = await to(database.order_model.create(params.body))
+        [err, result] = await to(database.order_model.create(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': 'Order placed successfully!',
-                'amount': `₹${price} x ${params.body.qty} items = ₹${price * params.body.qty}`
+                'amount': `₹${price} x ${req.body.qty} items = ₹${price * req.body.qty}`
             }, 'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 

@@ -1,51 +1,51 @@
 const {to} = require('await-to-js')
 const Sequelize = require('sequelize')
 
-const database = require('./../src/lib/database/database')
+const database = require('./../src/lib/database/models/cart_model')
 const logger = require('./../src/lib/logger/winston')
 const Order = require('./../controllers/orders_c')
 const cartVal = require('./../src/lib/Payload Validation/validate_joi')
 
-const showCart = async (params) => {
+const showCart = async (req, res) => {
     try {
         let err, result
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.username
+                customer: req.user.username
             }
         }))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': result,
             'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const addItem = async (params) => {
+const addItem = async (req, res) => {
     try {
-        let err, result
-        params.body.customer = params.user.username;
+        let err, result;
+        req.body.customer = req.user.username;
 
-        [err, result] = await to(cartVal.newOrder.validateAsync(params.body))
+        [err, result] = await to(cartVal.newOrder.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        [err, result] = await to(database.product_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
-                id: params.body.product_id
+                id: req.body.product_id
             }
         }))
         if (err) {
@@ -57,8 +57,8 @@ const addItem = async (params) => {
 
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.body.customer,
-                product_id: params.body.product_id
+                customer: req.body.customer,
+                product_id: req.body.product_id
             }
         }));
         if (err) {
@@ -66,53 +66,53 @@ const addItem = async (params) => {
         }
         if (result[0]) {
             [err, result] = await to(database.cartItems_model.update({
-                qty: Sequelize.literal(`qty+${params.body.qty}`)
+                qty: Sequelize.literal(`qty+${req.body.qty}`)
             }, {
                 where: {
-                    customer: params.body.customer,
-                    product_id: params.body.product_id
+                    customer: req.body.customer,
+                    product_id: req.body.product_id
                 }
             }))
             if (err) {
                 throw new Error(err.message)
             }
         } else {
-            [err, result] = await to(database.cartItems_model.create(params.body))
+            [err, result] = await to(database.cartItems_model.create(req.body))
             if (err) {
                 throw new Error(err.message)
             }
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': 'product added to card successfully!'
             }, 'error': null
-        }
+        })
 
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const updateQty = async (params) => {
+const updateQty = async (req, res) => {
     try {
         let err, result
-        params.body.customer = params.user.username;
+        req.body.customer = req.user.username;
 
-        [err, result] = await to(cartVal.newOrder.validateAsync(params.body))
+        [err, result] = await to(cartVal.newOrder.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        [err, result] = await to(database.product_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
-                id: params.body.product_id
+                id: req.body.product_id
             }
         }))
         if (err) {
@@ -124,8 +124,8 @@ const updateQty = async (params) => {
 
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.body.customer,
-                product_id: params.body.product_id
+                customer: req.body.customer,
+                product_id: req.body.product_id
             }
         }));
         if (err) {
@@ -136,47 +136,47 @@ const updateQty = async (params) => {
         }
 
         [err, result] = await to(database.cartItems_model.update({
-            qty: params.body.qty
+            qty: req.body.qty
         }, {
             where: {
-                customer: params.body.customer,
-                product_id: params.body.product_id
+                customer: req.body.customer,
+                product_id: req.body.product_id
             }
         }))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': 'new quantity updated successfully!'
             }, 'error': null
-        }
+        })
 
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const removeItem = async (params) => {
+const removeItem = async (req, res) => {
     try {
-        let err, result
-        params.body.customer = params.user.username;
+        let err, result;
+        req.body.customer = req.user.username;
 
-        [err, result] = await to(cartVal.productID.validateAsync(params.body))
+        [err, result] = await to(cartVal.productID.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        [err, result] = await to(database.product_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
-                id: params.body.product_id
+                id: req.body.product_id
             }
         }))
         if (err) {
@@ -188,8 +188,8 @@ const removeItem = async (params) => {
 
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.body.customer,
-                product_id: params.body.product_id
+                customer: req.body.customer,
+                product_id: req.body.product_id
             }
         }));
         if (err) {
@@ -201,36 +201,36 @@ const removeItem = async (params) => {
 
         [err, result] = await to(database.cartItems_model.destroy({
             where: {
-                customer: params.body.customer,
-                product_id: params.body.product_id
+                customer: req.body.customer,
+                product_id: req.body.product_id
             }
         }))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': 'product removed successfully from cart!'
             }, 'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const getAmount = async (params) => {
+const getAmount = async (req, res) => {
     try {
         let err, result
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.user.username
+                customer: req.user.username
             }
         }))
         if (err) {
@@ -239,7 +239,7 @@ const getAmount = async (params) => {
 
         let amount = 0;
         for (const item of result) {
-            [err, result] = await to(database.product_model.findAll({
+            [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
                 where: {
                     id: item['dataValues']['product_id']
                 }
@@ -251,27 +251,27 @@ const getAmount = async (params) => {
             amount += result[0]['dataValues']['price'] * item['dataValues']['qty']
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': `your total cart amount = ₹${amount}`
             }, 'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const checkOut = async (params) => {
+const checkOut = async (req, res) => {
     try {
         let err, result
 
-        [err, result] = await to(getAmount(params));
+        [err, result] = await to(getAmount(req.body));
         if (err) {
             throw new Error(err.message)
         }
@@ -284,7 +284,7 @@ const checkOut = async (params) => {
 
         [err, result] = await to(database.cartItems_model.findAll({
             where: {
-                customer: params.user.username
+                customer: req.user.username
             }
         }))
         if (err) {
@@ -299,7 +299,7 @@ const checkOut = async (params) => {
                     qty: item['dataValues']['qty']
                 },
                 user: {
-                    username: params.user.username
+                    username: req.user.username
                 }
             };
             [err, result] = await to(Order.newOrder(product))
@@ -320,23 +320,23 @@ const checkOut = async (params) => {
             }
         }
 
-        return {
+        return res.json({
             'data': {
                 'message': 'orders placed successfully!',
                 'bill': bill,
                 'amount': amount_message
             },
             'error': null
-        }
+        })
 
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 

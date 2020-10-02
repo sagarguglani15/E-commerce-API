@@ -1,18 +1,18 @@
 const {to} = require('await-to-js')
 
-const database = require('./../src/lib/database/database')
+const database = require('./../src/lib/database/models/product_model')
 const logger = require('./../src/lib/logger/winston')
 const reviewVal = require('./../src/lib/Payload Validation/validate_joi')
 const productVal = require('./../src/lib/Payload Validation/validate_joi')
 
-const getProducts = async (params) => {
+const getProducts = async (req, res) => {
     try {
         let err, result
 
-        if (params.product_id) {
+        if (req.params.product_id) {
             [err, result] = await to(database.product_model.findAll({
                 where: {
-                    id: params.product_id
+                    id: req.params.product_id
                 }
             }))
             if (err) {
@@ -23,14 +23,14 @@ const getProducts = async (params) => {
                 throw new Error('No product found for this id!')
             }
 
-            return {
+            return res.json({
                 'data': result,
                 'error': null
-            }
-        } else if (params.category_id) {
+            })
+        } else if (req.params.category_id) {
             [err, result] = await to(database.product_model.findAll({
                 where: {
-                    category_id: params.category_id
+                    category_id: req.params.category_id
                 }
             }))
             if (err) {
@@ -41,73 +41,73 @@ const getProducts = async (params) => {
                 throw new Error('No product found for this category id!')
             }
 
-            return {
+            return res.json({
                 'data': result,
                 'error': null
-            }
+            })
         } else {
             [err, result] = await to(database.product_model.findAll())
             if (err) {
                 throw new Error(err.message)
             }
 
-            return {
+            return res.json({
                 'data': result,
                 'error': null
-            }
+            })
         }
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const postProduct = async (params) => {
+const postProduct = async (req, res) => {
     try {
         let err, result
 
-        [err, result] = await to(productVal.newProduct.validateAsync(params))
+        [err, result] = await to(productVal.newProduct.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        [err, result] = await to(database.product_model.create(params))
+        [err, result] = await to(database.product_model.create(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': {"Success": "Product Added"},
             'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const postReview = async (params) => {
+const postReview = async (req, res) => {
     try {
         let err, result
 
-        [err, result] = await to(reviewVal.newReview.validateAsync(params))
+        [err, result] = await to(reviewVal.newReview.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
         [err, result] = await to(database.product_model.findAll({
             where: {
-                id: params.product_id
+                id: req.body.product_id
             }
         }))
         if (err) {
@@ -117,33 +117,33 @@ const postReview = async (params) => {
             throw new Error('No product exists with this id !')
         }
 
-        [err, result] = await to(database.review_model.create(params))
+        [err, result] = await to(require('./../src/lib/database/models/review_model').review_model.create(req.body))
         if (err) {
             throw new Error(err.message)
         }
 
-        return {
+        return res.json({
             'data': {"Success": "Review added!"},
             'error': null
-        }
+        })
 
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 
-const getReview = async (params) => {
+const getReview = async (req, res) => {
     try {
         let err, result
-        [err, result] = await to(database.review_model.findAll({
+        [err, result] = await to(require('./../src/lib/database/models/review_model').review_model.findAll({
             where: {
-                product_id: params.product_id
+                product_id: req.body.product_id
             }
         }))
         if (err) {
@@ -153,18 +153,18 @@ const getReview = async (params) => {
             throw new Error('No review found for this product id!')
         }
 
-        return {
+        return res.json({
             'data': result,
             'error': null
-        }
+        })
     } catch (err) {
         logger.error(err.message)
-        return {
+        return res.json({
             'data': null,
             'error': {
                 'message': err.message
             }
-        }
+        })
     }
 }
 

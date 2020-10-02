@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const authenticate = (req, res, next) => {
     try {
@@ -8,7 +9,7 @@ const authenticate = (req, res, next) => {
         } else {
             token = token.split(' ')[1]
             if (token) {
-                jwt.verify(token, process.env.mySecretKey, (err, user) => {
+                jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
                     if (err) {
                         throw new Error('Invalid Access Token')
                     } else {

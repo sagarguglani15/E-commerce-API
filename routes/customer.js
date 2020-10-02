@@ -5,74 +5,14 @@ const {to} = require('await-to-js')
 const Customer = require('./../controllers/customers_c')
 const authenticate = require('./../controllers/auth')
 
-router.post('/', async (req, res) => {
-    let err, result
-    [err, result] = await to(Customer.postCustomer(req.body))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-    return res.json(result)
-})
+router.post('/', Customer.postCustomer)
 
-router.post('/login', async (req, res) => {
-    let err, result
-    [err, result] = await to(Customer.loginCustomer(req.body))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-    return res.json(result)
-})
+router.post('/login', Customer.loginCustomer)
 
-router.get('/', authenticate, async (req, res) => {
-    let err, result
-    [err, result] = await to(Customer.getCustomer(req))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-    return res.json(result)
-})
+router.get('/', authenticate, Customer.getCustomer)
 
-router.put('/address', authenticate, async (req, res) => {
-    let err, result
-    [err, result] = await to(Customer.updateAddress(req))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-    return res.json(result)
-})
+router.put('/address', authenticate, Customer.updateAddress)
 
-router.put('/creditCard', authenticate, async (req, res) => {
-    let err, result
-    [err, result] = await to(Customer.updateCreditCard(req))
-    if (err) {
-        return res.json({
-            'data': null,
-            'error': {
-                'message': err.message
-            }
-        })
-    }
-    return res.json(result)
-})
+router.put('/creditCard', authenticate, Customer.updateCreditCard)
 
 module.exports = router
