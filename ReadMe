@@ -68,4 +68,3 @@ Install Postman using following command:
 
 Once the postman gets installed, you can import [E-commerce.postman_collection.json](https://github.com/sagarguglani15/E-commerce-API/blob/master/E-commerce.postman_collection.json "E-commerce.postman_collection.json") file as your collection and test all 29 APIs !
 
-
