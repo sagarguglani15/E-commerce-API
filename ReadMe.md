@@ -50,7 +50,7 @@ We will now add these to our code:
 **Note:** spaces are not allowed before or after equality sign.
 
 ## Step 6: Start the server
-By this, you have E-commerce folder created as your root directory.
+By this, you have E-commerce folder created as your root directory
 Open this in any IDE ( WebStorm/ VS Code)
 
 - on the IDE terminal, run the following command to install the dependent Node libraries:
