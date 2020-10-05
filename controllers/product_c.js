@@ -107,7 +107,7 @@ const postReview = async (req, res) => {
 
         [err, result] = await to(database.product_model.findAll({
             where: {
-                id: req.body.product_id
+                id: req.params.product_id
             }
         }))
         if (err) {
@@ -143,7 +143,7 @@ const getReview = async (req, res) => {
         let err, result
         [err, result] = await to(require('./../src/lib/database/models/review_model').review_model.findAll({
             where: {
-                product_id: req.body.product_id
+                product_id: req.params.product_id
             }
         }))
         if (err) {

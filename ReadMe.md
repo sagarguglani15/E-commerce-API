@@ -67,3 +67,6 @@ Install Postman using following command:
 > **sudo snap install postman**
 
 Once the postman gets installed, you can import [E-commerce.postman_collection.json](https://github.com/sagarguglani15/E-commerce-API/blob/master/E-commerce.postman_collection.json "E-commerce.postman_collection.json") file as your collection and test all 29 APIs !
+
+
+### You can also watch the tutorial for this projects [here](https://www.youtube.com/watch?v=Q04hcd-1kfA&t=758s)

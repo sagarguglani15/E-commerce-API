@@ -1,1 +1,11 @@
-{"message":"No category found with this id !","level":"error","service":"user-service"}
+{"message":"No review found for this product id!","level":"error","service":"user-service"}
+{"message":"No review found for this product id!","level":"error","service":"user-service"}
+{"message":"\"product_id\" is required","level":"error","service":"user-service"}
+{"message":"\"phone\" is required","level":"error","service":"user-service"}
+{"message":"\"email\" must be a valid email","level":"error","service":"user-service"}
+{"message":" A customer with this username already exists !","level":"error","service":"user-service"}
+{"message":"no customer with this username exists!","level":"error","service":"user-service"}
+{"message":"user's address is not updated!","level":"error","service":"user-service"}
+{"message":"user's creditCardNumber is not updated!","level":"error","service":"user-service"}
+{"message":"\"customer\" is not allowed","level":"error","service":"user-service"}
+{"message":"\"customer\" is not allowed","level":"error","service":"user-service"}
