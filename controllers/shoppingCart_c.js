@@ -36,12 +36,13 @@ const showCart = async (req, res) => {
 const addItem = async (req, res) => {
     try {
         let err, result;
-        req.body.customer = req.user.username;
 
         [err, result] = await to(cartVal.newOrder.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
+
+        req.body.customer = req.user.username;
 
         [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
@@ -103,12 +104,13 @@ const addItem = async (req, res) => {
 const updateQty = async (req, res) => {
     try {
         let err, result
-        req.body.customer = req.user.username;
 
         [err, result] = await to(cartVal.newOrder.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
+
+        req.body.customer = req.user.username;
 
         [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
@@ -167,12 +169,12 @@ const updateQty = async (req, res) => {
 const removeItem = async (req, res) => {
     try {
         let err, result;
-        req.body.customer = req.user.username;
 
         [err, result] = await to(cartVal.productID.validateAsync(req.body))
         if (err) {
             throw new Error(err.message)
         }
+        req.body.customer = req.user.username;
 
         [err, result] = await to(require('./../src/lib/database/models/product_model').product_model.findAll({
             where: {
